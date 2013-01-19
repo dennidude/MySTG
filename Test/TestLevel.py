@@ -41,11 +41,12 @@ class BadGuy(Foe) :
         if not (self.game.ScreenRect.left < self.rect.centerx and self.rect.centerx < self.game.ScreenRect.right) :
             self.speedX=-self.speedX
 
-        if self.rect.centery < self.game.ScreenRect.bottom :
+        if self.rect.centery > self.game.ScreenRect.bottom :
             self.impact(None)
 
     def impact(self,item) :
         Explosion(self)
+        self.kill
         self.game.Score+=5
 
 class TestShot(Shot) :
