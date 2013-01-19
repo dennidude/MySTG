@@ -14,7 +14,8 @@
 from Engine.stg import *
 
 class GoodGuy(Player) :
-    speed=15
+    speedX = 10
+    speedY = 0
     imageNames = ['RedCirkel.png'];
 
     def shoot(self):
@@ -24,29 +25,43 @@ class GoodGuy(Player) :
         Explosion(self)
         self.kill()
 
+
 class BadGuy(Foe) :
-    speed=15
+    speedX = 10
+    speedY = 1
     imageNames = [ 'BlueCirkel.png', 'BlueCirkel1.png', 'BlueCirkel2.png']
 
     def do(self) :
         if(random.random()>0.99 ) :
             TestBomb(self)
 
+    def move(self,x,y) :
+        Foe.move(self,x,y)
+
+        if not (self.game.ScreenRect.left < self.rect.centerx and self.rect.centerx < self.game.ScreenRect.right) :
+            self.speedX=-self.speedX
+
+        if self.rect.centery < self.game.ScreenRect.bottom :
+            self.impact(None)
+
     def impact(self,item) :
         Explosion(self)
         self.game.Score+=5
 
 class TestShot(Shot) :
+    speedX = 0
+    speedY = -10
     imageNames = ['LittelYellowCirkel.png']
 
 class TestBomb(Bomb) :
+    speedX = 0
+    speedY = 10
     imageNames = ['LittelBlackCirkel.png']
 
     def impact(self,item) :
         Explosion(self)
         self.kill()
         self.game.Score+=1
-
 
 class TestLevel(MyGame) :
     Enemyreload = 0
@@ -64,5 +79,5 @@ class TestLevel(MyGame) :
         if self.Enemyreload:
             self.Enemyreload = self.Enemyreload - 1
         else :
-             BadGuy()
+             BadGuy(0,0)
              self.Enemyreload = self.NextEnemyTime

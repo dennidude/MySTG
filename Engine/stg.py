@@ -24,10 +24,10 @@ class MySprite(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.containers)
 
 class ActionSprite(MySprite):
-    speed = 10
+    speedX = 10
+    speedY = 10
     images = []
     imageNames=[]
-
 
     def __init__(self):
         MySprite.__init__(self)
@@ -48,7 +48,7 @@ class Player(ActionSprite):
 
     def move(self, direction):
         if direction: self.facing = direction
-        self.rect.move_ip(direction*self.speed, 0)
+        self.rect.move_ip(direction*self.speedX, 0)
         self.rect = self.rect.clamp(self.game.ScreenRect)
 
     def shoot(self):
@@ -58,25 +58,25 @@ class Player(ActionSprite):
 class Foe(ActionSprite):
     animcycle = 12
 
-    def __init__(self):
+    def __init__(self,x,y):
         ActionSprite.__init__(self)
         self.rect = self.image.get_rect()
-        self.facing = random.choice((-1,1)) * self.speed
         self.frame = 0
-        if self.facing < 0:
-            self.rect.right = self.game.ScreenRect.right
+        self.rect.right = x
+        self.rect.left = y
+
+    def move(self,x,y):
+        self.rect.move_ip(x,y)
 
     def update(self):
-        self.rect.move_ip(self.facing, 0)
-        if not self.game.ScreenRect.contains(self.rect):
-            self.facing = -self.facing;
-            self.rect.top = self.rect.bottom + 1
-            self.rect = self.rect.clamp(self.game.ScreenRect)
+        self.move(self.speedX, self.speedY)
+
         self.frame = self.frame + 1
         self.image = self.images[self.frame//self.animcycle%3]
 
     def do(self) :
         pass
+
 
 class Shot(ActionSprite):
     imageNames = ['LittelYellowCirkel.png']
@@ -84,12 +84,13 @@ class Shot(ActionSprite):
     def __init__(self, pos):
         ActionSprite.__init__(self)
         self.rect = self.image.get_rect(midbottom=pos)
-        self.speed=-self.speed
+        self.speedX=-self.speedX
 
     def update(self):
-        self.rect.move_ip(0, self.speed)
+        self.rect.move_ip(self.speedX, self.speedY)
         if self.rect.top <= 0:
             self.kill()
+
 
 class Bomb(ActionSprite):
     imageNames = []
@@ -100,9 +101,10 @@ class Bomb(ActionSprite):
                     Shooter.rect.move(0,5).midbottom)
 
     def update(self):
-        self.rect.move_ip(0, self.speed)
+        self.rect.move_ip(self.speedX, self.speedY)
         if self.rect.bottom >= 470:
             self.impact(None)
+
 
 class Explosion(pygame.sprite.Sprite):
     defaultlife = 12
