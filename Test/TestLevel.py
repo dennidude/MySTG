@@ -12,6 +12,7 @@
 #
 
 from Engine.stg import *
+from Engine.enemies import *
 
 class GoodGuy(Player) :
     speedX = 10
@@ -25,8 +26,7 @@ class GoodGuy(Player) :
         Explosion(self)
         self.kill()
 
-
-class BadGuy(Foe) :
+class BadGuy(WalkLeftRightFoe) :
     speedX = 10
     speedY = 1
     imageNames = [ 'BlueCirkel.png', 'BlueCirkel1.png', 'BlueCirkel2.png']
@@ -35,19 +35,6 @@ class BadGuy(Foe) :
         if(random.random()>0.99 ) :
             TestBomb(self)
 
-    def move(self,x,y) :
-        Foe.move(self,x,y)
-
-        if not (self.game.ScreenRect.left < self.rect.centerx and self.rect.centerx < self.game.ScreenRect.right) :
-            self.speedX=-self.speedX
-
-        if self.rect.centery > self.game.ScreenRect.bottom :
-            self.impact(None)
-
-    def impact(self,item) :
-        Explosion(self)
-        self.kill
-        self.game.Score+=5
 
 class TestShot(Shot) :
     speedX = 0
