@@ -30,6 +30,6 @@ class WalkLeftRightFoe(Foe) :
             self.impact(None)
 
     def impact(self,item) :
-        Explosion(self)
+        self.game.GameExplosion(self)
         self.kill
         self.game.Score+=5

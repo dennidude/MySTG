@@ -17,7 +17,7 @@ main_dir = os.path.split(os.path.abspath(__file__))[0]
 
 def load_image(file):
     "loads an image, prepares it for play"
-    file = os.path.join(main_dir, '..\Test\Image', file)
+    file = os.path.join(main_dir, "..\\", file)
     try:
         surface = pygame.image.load(file)
     except pygame.error:
@@ -25,8 +25,8 @@ def load_image(file):
     surface.set_colorkey((255,255,255))
     return surface.convert()
 
-def load_images(files):
+def load_images(gameName,nameOfFiles):
     imgs = []
-    for file in files:
-        imgs.append(load_image(file))
+    for name in nameOfFiles:
+        imgs.append(load_image(gameName+"\\Image\\"+name))
     return imgs

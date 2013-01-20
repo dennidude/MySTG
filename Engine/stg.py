@@ -31,11 +31,27 @@ class ActionSprite(MySprite):
 
     def __init__(self):
         MySprite.__init__(self)
-        self.images=load_images(self.imageNames)
+        self.images=load_images(self.game.GameName,self.imageNames)
         self.image = self.images[0]
 
     def impact(self):
         pass
+
+class Animate():
+    frameDuration=[]
+
+    def __init__(self):
+        self.frame = 0
+        self.timeToNextFrame = 0
+
+    def update(self):
+        self.timeToNextFrame+=1
+        if not self.timeToNextFrame < self.frameDuration[self.frame] :
+            self.image = self.images[self.frame]
+            self.frame += 1
+            self.timeToNextFrame=0
+            if not self.frame < len(self.images)-1 :
+                self.frame=0
 
 class Player(ActionSprite):
 
@@ -55,13 +71,12 @@ class Player(ActionSprite):
         pass
 
 
-class Foe(ActionSprite):
-    animcycle = 12
+class Foe(ActionSprite,Animate):
 
     def __init__(self,x,y):
         ActionSprite.__init__(self)
+        Animate.__init__(self)
         self.rect = self.image.get_rect()
-        self.frame = 0
         self.rect.right = x
         self.rect.left = y
 
@@ -70,9 +85,7 @@ class Foe(ActionSprite):
 
     def update(self):
         self.move(self.speedX, self.speedY)
-
-        self.frame = self.frame + 1
-        self.image = self.images[self.frame//self.animcycle%3]
+        Animate.update(self)
 
     def do(self) :
         pass
@@ -106,23 +119,22 @@ class Bomb(ActionSprite):
             self.impact(None)
 
 
-class Explosion(pygame.sprite.Sprite):
-    defaultlife = 12
-    animcycle = 3
+class Explosion(ActionSprite,Animate):
+    duration = 10
+    timeLeft=0
+    imageName=[];
     images = []
 
     def __init__(self, actor):
-        pygame.sprite.Sprite.__init__(self, self.containers)
-        img = load_image('YellowCirkel.png')
-        self.images = [img, pygame.transform.flip(img, 1, 1)]
-        self.image = self.images[0]
+        ActionSprite.__init__(self)
+        Animate.__init__(self)
         self.rect = self.image.get_rect(center=actor.rect.center)
-        self.life = self.defaultlife
+        self.timeLeft = self.duration
 
     def update(self):
-        self.life = self.life - 1
-        self.image = self.images[self.life//self.animcycle%2]
-        if self.life <= 0: self.kill()
+        Animate.update(self)
+        self.timeLeft = self.timeLeft - 1
+        if self.timeLeft <= 0: self.kill()
 
 class Score(MySprite):
 
@@ -148,9 +160,12 @@ class MyGame() :
     WindowsCornerY = 0
     WindowsHigh = 100
     WindowsWidth = 100
+    GameExplosion=None
+    GameName=""
     Score = 0
 
-    def __init__(self):
+    def __init__(self,gameName):
+        self.GameName=gameName;
         self.ScreenRect     = Rect(self.WindowsCornerX,
                                    self.WindowsCornerY,
                                    self.WindowsWidth,

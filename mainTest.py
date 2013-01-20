@@ -14,7 +14,7 @@
 from Test.TestLevel import *
 
 def main(winstyle = 0):
-    this_game = TestLevel()
+    this_game = TestLevel("Test")
     MySprite.game=this_game
     this_game.setup(winstyle)
 

@@ -23,13 +23,14 @@ class GoodGuy(Player) :
         TestShot((self.rect.centerx, self.rect.centery))
 
     def impact(self,item) :
-        Explosion(self)
+        self.game.GameExplosion(self)
         self.kill()
 
 class BadGuy(WalkLeftRightFoe) :
     speedX = 10
     speedY = 1
     imageNames = [ 'BlueCirkel.png', 'BlueCirkel1.png', 'BlueCirkel2.png']
+    frameDuration=[4,8,4]
 
     def do(self) :
         if(random.random()>0.99 ) :
@@ -47,9 +48,14 @@ class TestBomb(Bomb) :
     imageNames = ['LittelBlackCirkel.png']
 
     def impact(self,item) :
-        Explosion(self)
+        TestExplosion(self)
         self.kill()
         self.game.Score+=1
+
+class TestExplosion(Explosion):
+    duration = 10
+    imageNames=['YellowCirkel.png'];
+    frameDuration=[8]
 
 class TestLevel(MyGame) :
     Enemyreload = 0
@@ -59,6 +65,7 @@ class TestLevel(MyGame) :
     WindowsCornerY = 0
     WindowsHigh = 480
     WindowsWidth = 680
+    GameExplosion=TestExplosion
 
     def createPlayer(self):
         return GoodGuy();
