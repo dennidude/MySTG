@@ -45,13 +45,13 @@ class Animate():
         self.timeToNextFrame = 0
 
     def update(self):
-        self.timeToNextFrame+=1
+        self.timeToNextFrame += 1
         if not self.timeToNextFrame < self.frameDuration[self.frame] :
             self.image = self.images[self.frame]
             self.frame += 1
-            self.timeToNextFrame=0
-            if not self.frame < len(self.images)-1 :
-                self.frame=0
+            self.timeToNextFrame = 0
+        if not self.frame < len(self.images)-1 :
+                self.frame = 0
 
 class Player(ActionSprite):
 
@@ -92,7 +92,7 @@ class Foe(ActionSprite,Animate):
 
 
 class Shot(ActionSprite):
-    imageNames = ['LittelYellowCirkel.png']
+    imageNames = ['bullet1_edited']
 
     def __init__(self, pos):
         ActionSprite.__init__(self)
@@ -120,7 +120,7 @@ class Bomb(ActionSprite):
 
 
 class Explosion(ActionSprite,Animate):
-    duration = 10
+    duration = 2
     timeLeft=0
     imageName=[];
     images = []
@@ -156,6 +156,7 @@ class Score(MySprite):
 class MyGame() :
     Enemyreload = 0
     MaxShots     = 5
+    LeftKey=K_a
     WindowsCornerX = 0
     WindowsCornerY = 0
     WindowsHigh = 100
@@ -239,7 +240,7 @@ class MyGame() :
             all.update()
 
             #handle player input
-            direction = keystate[K_RIGHT] - keystate[K_LEFT]
+            direction = keystate[K_RIGHT] - keystate[self.LeftKey]
             player.move(direction)
             firing = keystate[K_SPACE]
             if not player.reloading and firing and len(shots) < self.MaxShots:

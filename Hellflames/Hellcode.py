@@ -1,11 +1,10 @@
 #!/usr/bin/env python
-#!/usr/bin/env python
 #
 # MySTG 0.0.0
 # stg.py
 # https://github.com/magnuskronnas/MySTG
 #
-# Copyright 2012,2013 Magnus Kronnas
+# Copyright 2012,2013 Dennis Sarafiloski
 # Licensed under GPL Version 2 licenses.
 #
 # Date: 2013-01-13
@@ -16,8 +15,9 @@ from Engine.enemies import *
 
 class GoodGuy(Player) :
     speedX = 10
-    speedY = 0
-    imageNames = ['RedCirkel.png'];
+    speedY = 5
+    imageNames = ['playership1_idle1_edited.png', 'playership1_idle2_edited.png'];
+    frameDuration=[5,5]
 
     def shoot(self):
         TestShot((self.rect.centerx, self.rect.centery))
@@ -29,8 +29,8 @@ class GoodGuy(Player) :
 class BadGuy(WalkLeftRightFoe) :
     speedX = 10
     speedY = 1
-    imageNames = [ 'BlueCirkel.png', 'BlueCirkel1.png', 'BlueCirkel2.png']
-    frameDuration=[4,8,4]
+    imageNames = [ 'eye_edited.png']
+    frameDuration=[5]
 
     def do(self) :
         if(random.random()>0.99 ) :
@@ -40,7 +40,8 @@ class BadGuy(WalkLeftRightFoe) :
 class TestShot(Shot) :
     speedX = 0
     speedY = -10
-    imageNames = ['LittelYellowCirkel.png']
+    imageNames = ['bullet1_edited.png']
+
 
 class TestBomb(Bomb) :
     speedX = 0
@@ -60,11 +61,11 @@ class TestExplosion(Explosion):
 class HellGame(MyGame) :
     Enemyreload = 0
     NextEnemyTime=12
-    MaxShots     = 5
+    MaxShots     = 3
     WindowsCornerX = 0
     WindowsCornerY = 0
-    WindowsHigh = 480
-    WindowsWidth = 680
+    WindowsHigh = 720
+    WindowsWidth = 1280
     GameExplosion=TestExplosion
 
     def createPlayer(self):
